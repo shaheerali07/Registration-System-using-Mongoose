@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const flash = require("connect-flash");
 const session = require("express-session");
+const dbConfig = require("./config/keys.js");
 
 //initializing app variable with express
 const app = express();
@@ -15,13 +16,26 @@ require("./config/passport")(passport);
 const db = require("./config/keys").MongoURI;
 
 // Connect to mongodb
+//mongoose
+//.connect(db, {
+//useUnifiedTopology: true,
+//useNewUrlParser: true
+//})
+//.then(() => console.log("MongoDB connected"))
+//.catch(err => console.log(err));
+
+// Connecting to the database
 mongoose
-  .connect(db, {
-    useUnifiedTopology: true,
+  .connect(dbConfig.url, {
     useNewUrlParser: true
   })
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err));
+  .then(() => {
+    console.log("Successfully connected to the database");
+  })
+  .catch(err => {
+    console.log("Could not connect to the database. Exiting now...", err);
+    process.exit();
+  });
 
 //ejs
 app.use(expressLayouts);
